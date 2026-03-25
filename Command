@@ -1,0 +1,87 @@
+. Update system
+sudo apt update && sudo apt upgrade -y
+🔹 2. Install Apache
+sudo apt install apache2 -y
+
+Check:
+
+systemctl status apache2
+
+Test:
+
+http://<your-server-ip>
+🔹 3. Install MySQL
+sudo apt install mysql-server -y
+
+Secure it:
+
+sudo mysql_secure_installation
+
+Login test:
+
+sudo mysql
+🔹 4. Install PHP
+sudo apt install php libapache2-mod-php php-mysql -y
+
+Verify:
+
+php -v
+🔹 5. Test PHP in Apache
+sudo nano /var/www/html/info.php
+<?php phpinfo(); ?>
+
+Then:
+
+http://<your-server-ip>/info.php
+🔹 6. Fix Apache priority (IMPORTANT)
+
+Make PHP index load first:
+
+sudo nano /etc/apache2/mods-enabled/dir.conf
+
+Change:
+
+DirectoryIndex index.php index.html index.cgi index.pl index.xhtml index.htm
+
+Restart:
+
+sudo systemctl restart apache2
+🔹 7. Firewall (if enabled)
+sudo ufw allow 'Apache'
+sudo ufw enable
+
+🔥Optional (but you SHOULD do this)
+Enable useful Apache modules
+sudo a2enmod rewrite
+sudo a2enmod headers
+sudo a2enmod ssl
+sudo systemctl restart apache2
+
+Create Virtual Host (for real-world setup)
+sudo mkdir -p /var/www/myapp
+sudo chown -R $USER:$USER /var/www/myapp
+
+Config:
+
+sudo nano /etc/apache2/sites-available/myapp.conf
+<VirtualHost *:80>
+    ServerName myapp.local
+    DocumentRoot /var/www/myapp
+
+    <Directory /var/www/myapp>
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/myapp_error.log
+    CustomLog ${APACHE_LOG_DIR}/myapp_access.log combined
+</VirtualHost>
+
+Enable:
+
+sudo a2ensite myapp.conf
+sudo a2dissite 000-default.conf
+sudo systemctl reload apache2
+Local DNS (for testing)
+sudo nano /etc/hosts
+127.0.0.1 myapp.local
