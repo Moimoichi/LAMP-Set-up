@@ -77,5 +77,9 @@ Troubleshooting
 Apache not starting: sudo systemctl status apache2
 MySQL login issues: sudo mysql_secure_installation
 PHP errors: check /var/log/apache2/error.log
+<<<<<<< HEAD
+=======
+````
+>>>>>>> 440b7e2 (Add badges to README)
 
 ![License](https://img.shields.io/badge/license-MIT-blue)
