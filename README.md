@@ -1,32 +1,79 @@
-# LAMP Stack Deployment on Ubuntu
+# LAMP Stack Setup on Ubuntu 20.04
 
 ## Overview
-This project demonstrates setting up a full LAMP stack on Ubuntu for web applications, including Apache, MySQL, and PHP.
+This project demonstrates a full **LAMP stack setup** on Ubuntu 20.04, including:
 
-## Features
-- Apache web server
-- PHP with MySQL support
-- Virtual hosts setup
-- Firewall and security basics
-- PHP test page
+- **Apache** – Web server  
+- **MySQL** – Database server  
+- **PHP** – Server-side scripting  
+- Optional **Virtual Hosts** configuration  
 
-## Steps
-1. Update system packages
-2. Install Apache
-3. Install MySQL and secure installation
-4. Install PHP and test
-5. Configure virtual hosts
-6. Enable Apache modules (rewrite, headers, ssl)
-7. Test PHP with `phpinfo()`
+This setup is intended for local development or server deployment.
 
-## Screenshots
-- [screenshots/apache_test.png]
-- [screenshots/phpinfo.png]
+---
 
-## Notes
-- Apache default index order adjusted
-- Firewall rules applied
-- Useful for deploying PHP apps or APIs
+## Prerequisites
 
-## License
-MIT
+- Ubuntu 20.04 server
+- Root or sudo privileges
+- Basic knowledge of Linux commands
+- Internet connection to download packages
+
+---
+
+## Directory Structure
+LAMP-Set-up/
+├── configs/
+│ ├── apache/ # Apache configuration files
+│ ├── php/ # PHP configuration files (php.ini, etc.)
+│ └── mysql/ # MySQL configuration files (my.cnf)
+├── scripts/ # Bash scripts for automation
+├── docs/ # Optional screenshots or diagrams
+└── README.md
+
+
+---
+
+## Setup Steps
+
+### 1. Update System
+
+```bash
+sudo apt update -y
+sudo apt upgrade -y
+
+Install Apache, MySQL, PHP
+sudo apt install apache2 mysql-server php libapache2-mod-php php-mysql -y
+3. Verify Installation
+Apache: http://server-ip
+MySQL: sudo systemctl status mysql
+
+PHP: create a info.php file in /var/www/html/:
+<?php phpinfo(); ?>
+
+Copy Configurations (Optional)
+mkdir -p ~/LAMP-Set-up/configs/apache
+cp /etc/apache2/sites-available/*.conf ~/LAMP-Set-up/configs/apache/
+
+mkdir -p ~/LAMP-Set-up/configs/php
+cp /etc/php/7.4/apache2/php.ini ~/LAMP-Set-up/configs/php/
+
+mkdir -p ~/LAMP-Set-up/configs/mysql
+cp /etc/mysql/mysql.conf.d/mysqld.cnf ~/LAMP-Set-up/configs/mysql/
+
+
+Enable Apache Modules and Restart
+sudo a2enmod rewrite
+sudo systemctl restart apache2
+6. Optional: Virtual Hosts Setup
+Copy your vhost .conf files to /etc/apache2/sites-available/
+Enable site: sudo a2ensite your-vhost.conf
+Reload Apache: sudo systemctl reload apache2
+Access Instructions
+Apache Web Server: http://server-ip
+MySQL: mysql -u root -p
+PHP Info Page: http://server-ip/info.php
+Troubleshooting
+Apache not starting: sudo systemctl status apache2
+MySQL login issues: sudo mysql_secure_installation
+PHP errors: check /var/log/apache2/error.log
